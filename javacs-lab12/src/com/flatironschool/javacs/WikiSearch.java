@@ -60,8 +60,19 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch or(WikiSearch that) {
-        // FILL THIS IN!
-		return null;
+		HashMap<String, Integer> map1 = new HashMap<String, Integer>();
+        for (Entry<String, Integer> entry: that.map.entrySet()) {
+        	map1.put(entry.getKey(), entry.getValue());
+        }
+        for (Entry<String, Integer> entry: this.map.entrySet()) {
+        	Integer i = entry.getValue();
+        	if(map1.containsKey(entry.getKey())) {
+        		i += map1.get(entry.getKey());
+        	}
+        	map1.put(entry.getKey(), i);
+        }
+        return new WikiSearch(map1);
+
 	}
 	
 	/**
@@ -71,8 +82,14 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch and(WikiSearch that) {
-        // FILL THIS IN!
-		return null;
+        HashMap<String, Integer> map1 = new HashMap<String, Integer>();
+        for (Entry<String, Integer> entry: that.map.entrySet()) {
+        	if(this.map.containsKey(entry.getKey())) {
+        		map1.put(entry.getKey(), entry.getValue() + this.map.get(entry.getKey()));
+        	}
+        }
+
+		return new WikiSearch(map1);
 	}
 	
 	/**
@@ -82,8 +99,13 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch minus(WikiSearch that) {
-        // FILL THIS IN!
-		return null;
+        HashMap<String, Integer> map1 = new HashMap<String, Integer>();
+        for (Entry<String, Integer> entry: this.map.entrySet()) {
+        	if (!that.map.containsKey(entry.getKey())) {
+        		map1.put(entry.getKey(), entry.getValue());
+        	}
+        }
+        return new WikiSearch(map1);
 	}
 	
 	/**
@@ -104,8 +126,15 @@ public class WikiSearch {
 	 * @return List of entries with URL and relevance.
 	 */
 	public List<Entry<String, Integer>> sort() {
-        // FILL THIS IN!
-		return null;
+        List<Entry<String, Integer>> sortedList = new LinkedList<Entry<String, Integer>>();
+        sortedList.addAll(this.map.entrySet());
+        Collections.sort(sortedList, new Comparator<Entry<String, Integer>>() {
+        		public int compare(Entry<String, Integer> e1, Entry<String, Integer> e2) {
+        			return e1.getValue() - e2.getValue();
+        		}
+        		}
+        	);
+        return sortedList;
 	}
 
 	/**
